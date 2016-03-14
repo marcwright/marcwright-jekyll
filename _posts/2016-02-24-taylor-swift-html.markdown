@@ -5,6 +5,9 @@ published: true
 date:   2016-02-08 15:29:23 -0500
 categories:
 ---
+
+**in progress...**
+
 [CodePen](http://codepen.io/marcwright/pen/XdWVrG)
 
 Both songwriting and good code are about patterns. We encapuslate our code for readability and reusability. Songs are similar. When building a track, you may reuse a snippet of audio from one verse to pop into another. When you're using Logic or Pro Tools you also want your environment to be very clean and use good naming conventions. 
