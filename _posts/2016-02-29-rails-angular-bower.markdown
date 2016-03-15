@@ -6,8 +6,6 @@ published: true
 categories:
 ---
 
-#### tl;dr
-
 Rails provides an excellent backend for your Javascript front-end framework.
 
 ### Why Rails?
