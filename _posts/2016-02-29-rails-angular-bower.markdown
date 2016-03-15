@@ -1,50 +1,54 @@
 ---
 layout: post
 title: rails + angular + bower
-date:   2016-02-08 15:29:23 -0500
+date:   2016-03-15 15:29:23 -0500
 published: true
 categories:
 ---
-#Rails Angular Talk
 
-## Objectives
-- Why Rails?
-- How to implement Rails and Bower
+#### tl;dr
 
-##Why Rails?
-A couple of key features of Rails. 
+Rails provides an excellent backend for your Javascript front-end framework.
 
-- Rails API is a great lightweight, powerful server-side solution. You can add your front-end framework on top of it.
+### Why Rails?
+Rails API is a great lightweight, powerful server-side solution. You can add your front-end framework on top of it.
 
-- It’s very structured and has a set of standards that the Rails community has agreed upon as best practice. So if another Rails dev is checking out your app, it’s easier to get up and running.
-- allows you to scaffold apps very quickly so it's great for Startups, not too painful to roll out a prototype
-  - AirBnb, Hulu, Twitter, Blue Apron, Plated, Daily Burn, GA website, Robinhood FAQ
-- Auto-magical- can be good or bad
-  - GOOD - rapid prototyping
-  - BAD - Don’t always know what’s going on under the hood. As long as you play in their sandbox you’re ok   
-
-#### Rails API
-You can use rails for it's rails API only. It will scaffold out a project with no views. You can host Rails in one place and your front end in another.
+The Rails motto is "convention over configuration". Rails provides a set of standards that the community has agreed upon as best practice. So if another Rails dev is checking out your app, it’s easier to get up and running.
 
 
-## Rails App Instructions
-Credit goes to this the [Angular-Rails](http://angular-rails.com/) tutorial. It was my reference to get Bower up and running.
+Rails allows you to scaffold apps very quickly so it's great for startups. It's relatively painless to roll out a prototype.
 
-- `rails new books -T --database=postgresql`
+- e.g.- AirBnb, Hulu, Twitter, Blue Apron, Plated, Daily Burn, GA website, Robinhood FAQ
 
-> This command will create a new rails project + directory called books. It will also skip the test unit and use the `gem pg` for our database. By default Rails uses SQLite
+Rails is "auto-magical", which can be good or bad.
 
-- `cd books && bin/rake db:create`
+- GOOD - rapid prototyping
+- BAD - Sometimes you don’t always know what’s going on under the hood, but as long as you play in their sandbox you’re ok.
 
-> We'll `cd` into the project directory and create our database
+### Rails API
+You can also roll out a Rails app using the server + API only. It will scaffold out a project with no views. This would allow you to host Rails on one server and your front end on another. This makes for an extremely lightweight Rails app since it takes out any middlewares and extra cruft that the views would normally use.
 
-- At this point, we can start our Rails server with `rails server` and checkout the welcome page at [localhost:3000](cd books && bin/rake db:create)
+For a clunky analogy... the Rails API would be like a hard-top convertible in that we can completely remove the views. A soft-top convertible is like scaffolding a  standard Rails app but ignoring the views (even though the functionality is always available).
+
+## Rails App Code Along
+Completed code for this article can be found [here](https://github.com/marcwright/books-angular-rails-demo). Credit goes to this excellent [Angular-Rails](http://angular-rails.com/) tutorial. It was my reference for the initial Bower implementation.
+
+1) `rails new books -T --database=postgresql`
+
+  *This command will create a new rails project + directory called books. `-T` tells Rails not to scaffold a test suite. `--database=postgresql` will automatically bundle the `gem pg` so we may use a PostgreSQL database. By default Rails uses SQLite.*
+
+2) `cd books && bin/rake db:create`
+
+  *This will `cd` into the project directory and create our database*
+
+3) At this point, we can start our Rails server with `rails server` and checkout the welcome page at [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 ## Add and configure Angular + Bootstrap using Bower
 Bower was created by Twitter specifically to manage front-end assets. We'll use it to set up our front-end packages and dependencies.
 
-- Add `gem 'bower-rails'` to the `Gemfile`
-- Next, `touch Bowerfile` to create a `Bowerfile` in the root of the project and add:
+4) Add `gem 'bower-rails'` to the `Gemfile`
+
+5) Next, on the command line, run `touch Bowerfile`. This will create a `Bowerfile` in the root of the project. Then add the following to that file:
 
 ~~~ruby
 # This will add Angular and Bootstrap-Sass
@@ -52,22 +56,21 @@ asset 'angular'
 asset 'bootstrap-sass-official'
 ~~~
 
-- Run `rake bower:install`
-  
-> Bower installs dependencies in `vendor/assets/bower_components`. The Rails [asset pipeline](https://launchschool.com/blog/rails-asset-pipeline-best-practices) dictates that 3rd party code lives in the `vendor` directory.
+6) Run `rake bower:install`
 
-- Since we're adding stuff outside of the normal flow of the asset pipeine we'll need to add it to `config/application.rb`.
+  *Bower installs dependencies in `vendor/assets/bower_components`. The Rails [asset pipeline](https://launchschool.com/blog/rails-asset-pipeline-best-practices) dictates that 3rd party code lives in the `vendor` directory.*
+
+7) Since we're adding stuff outside of the normal flow of the asset pipeine we'll need to add it to `config/application.rb`.
 
 ~~~ruby
 # Paste this code inside of
 # class Application < Rails::Application
-config.assets.paths << Rails.root.join("vendor","assets","bower_components")
 config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","assets","fonts")
 config.assets.precompile << %r(.*.(?:eot|svg|ttf|woff|woff2)$)
 ~~~
 
 
-- Let's add the Angular require paths to `app/assets/javascripts/application.js`. We'll also remove turbolinks since it can hinder performance for front-end frameworks. Your requires should look like so:
+8) Let's add the Angular require paths to `app/assets/javascripts/application.js`. [Turbolinks](http://guides.rubyonrails.org/working_with_javascript_in_rails.html) is a gem that uses Ajax to speed up page rendering in most applications. We'll remove turbolinks since it can hinder performance for front-end frameworks. Your requires should look like so:
 
 ~~~ruby
 //= require jquery
@@ -75,16 +78,20 @@ config.assets.precompile << %r(.*.(?:eot|svg|ttf|woff|woff2)$)
 //= require angular/angular
 //= require_tree .
 ~~~
- - Let's import our bootstrap stylesheets in `app/assets/stylesheets/application.css.scss` beneath all of the comments. Also, be sure to add the `.scss` extension to the file name:
+
+
+9) Let's import our bootstrap stylesheets in `app/assets/stylesheets/application.css.scss` beneath all of the comments. Also, be sure to add the `.scss` extension to the file name:
 
 ~~~scss
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap-sprockets";
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
 ~~~
-## MVC to serve our Angular app
 
-- Add `root 'home#index'` to `routes.rb`. This will be the main route that will serve our Angular app.
-- Let's create a controller for that route. Create `app/assets/controllers/home_controller.rb` and add:
+## Add a doorway route for our Angular app
+
+10) Add `root 'home#index'` to `routes.rb`. This will be the main route that will serve as the doorway to our Angular app.
+
+11) Let's create a controller for that route. Create `app/assets/controllers/home_controller.rb` and add:
 
 ~~~ruby
 class HomeController < ApplicationController
@@ -93,15 +100,14 @@ class HomeController < ApplicationController
 end
 ~~~
 
-> We should be able to run `rails server` and see a Rails welcome page rendered.
 
-### Instantiate our Angular App
 
-- For this demo we're gonna use a Book Model so we'll call this our bookApp. Let's create `app/assets/javascripts/app.js` and add code to instantiate our Angular app:
+## Instantiate our Angular App
+
+12) For this demo we're gonna use a Book Model so we'll call this our bookApp. Let's create `app/assets/javascripts/app.js` and add code to instantiate our Angular app:
 
 ~~~javascript
-angular.module('bookApp',[
-])
+angular.module('bookApp',[])
  .controller('BooksController', BooksController);
 
   function BooksController() {
@@ -109,17 +115,20 @@ angular.module('bookApp',[
     vm.names = ["Marc", "Maren", "Diesel"]
   }
 ~~~
-> We're using `var vm` here for view model. I've also included some dummy data to make sure our view is wired up correctly.
 
-### Create a view
+*We're using `var vm` here for view model. I've also included some dummy data to make sure our view is wired up correctly.*
 
-- Create `app/assets/views/home/index.html.erb` and add:
+## Create a view
+
+13) Create `app/assets/views/home/index.html.erb` and add:
 
 ~~~html
 <div class="container-fluid" ng-app="bookApp">
   <div class="panel panel-success">
     <div class="panel-heading">
+      {% raw %}
       <h1 ng-if="name">Hello, {{name}}</h1>
+      {% endraw %}
     </div>
     <div class="panel-body">
       <form class="form-inline">
@@ -133,39 +142,60 @@ angular.module('bookApp',[
   <div class="panel panel-success" ng-controller="BooksController as ctrl">
     <div class="panel-heading">
       <ul ng-repeat="book in ctrl.names">
+        {% raw %}
         Hello, {{book}}
+        {% endraw %}
       </ul>
     </div>
   </div>
 </div>
 ~~~
-> You could also add `ng-app` to the `body` tag in `app/assets/views/layouts/application.html.erb`. This would make our entire app belong to `booksApp`.
 
-We can start up our `rails server` and go to `localhost:3000` to make sure that Angular is working.
+  *You could also add `ng-app` to the `body` tag in `app/assets/views/layouts/application.html.erb`. Then our entire app would belong to `booksApp`.*
 
-####Create the Book model
+14) We can start up our `rails server` and go to `localhost:3000` to make sure that Angular is working.
 
-- `rails g model Book title author`
-> We'll create a model for Book with title and author fields (both Strings,  by default)
+## Create the Book model + add some seed data
 
-- `rake db:migrate`
+15) `rails g model Book title author`
 
-####Let's add some seed data for our Book model
+  *We'll create a model for Book with title and author fields (both Strings,  by default)*
 
-- Let's add some seed data to `db/seed.rb` to populate our database:
+16) Let's add some seed data to `db/seed.rb` to populate our database:
 
 ~~~ruby
 Book.destroy_all
 Book.create([
   {title: "50 Shades", author: "Schmitty"},
   {title: "Lawyer Books", author: "Grisham"}
-  ])
+])
 ~~~
-- `rake db:migrate db:seed`
 
-##Set up our REST-ful api endpoint to serve the JSON
+17) From the command line run `rake db:migrate db:seed`
 
-- We're gonna use [jbuilder](https://github.com/rails/jbuilder) to serve our books API data. Let's create `app/assets/views/books/index.json.jbuilder` and add:
+  *This will create our schema file and seed our database*
+
+## Set up our REST-ful api endpoint to serve the JSON
+
+18) Add a route to our `app/config/routes.rb` file under our `root` route.
+
+~~~ruby
+ get '/books' => 'books#index'
+~~~
+
+  *A route consists of the HTTP verb, the URL and the controller/action.*
+
+19) Eventually, we're gonna use `$http.get` in our Angular controller to grab our data. Create a file in `app/assets/controllers/books_controller.rb`. Then, let's make all the books available via JSON in our `BooksController` index action:
+
+~~~ruby
+class BooksController < ApplicationController
+  def index
+    @books = Book.all
+  end
+end
+~~~
+
+20) We're gonna use [jbuilder](https://github.com/rails/jbuilder) to serve our books API data. Let's create `app/assets/views/books/index.json.jbuilder` and add:
 
 ~~~ruby
 json.array!(@books) do |book|
@@ -173,62 +203,45 @@ json.array!(@books) do |book|
 end
 ~~~
 
-> We're creating a view folder for books, though we aren't going to create an actual view. We're serving JSON only.
-
-- Eventually, we're gonna use `$http.get` in our Angular controller to grab our data. Create a file in `app/assets/controllers/books_controller.rb`. Then, let's make all the books available via JSON in our `BooksController` index action:
-
-~~~ruby
-class BooksController < ApplicationController  
-  def index
-    @books = Book.all
-  end
-end
-~~~
-- Add a route to our `app/config/routes.rb` file under our `root` route.
-
-~~~ruby
- get '/books' => 'books#index'
-~~~
-> A route consists of the HTTP verb, the URL and the controller/action.
-
-- Now we can start our server `rails server` and go to `http://localhost:3000/books.json` to see that Rails is serving our data as JSON.
+21) Now we can start our server `rails server` and go to `http://localhost:3000/books.json` to see that Rails is serving our data as JSON.
 
 ## Grab the data using Angular
 
-- Let's add some code to grab all the books from our endpoint in `app/assets/javascripts/app.js`
+23) Let's add some code to grab all the books from our endpoint in `app/assets/javascripts/app.js`
 
 ~~~javascript
-angular.module('booksApp',[
-])
+angular.module('booksApp',[])
  .controller('BooksController', BooksController);
 
-  function BooksController($http) {
-    var vm = this;
-    vm.names = ["Marc", "Maren", "Diesel"]
-    vm.books = getBooks().success(function(data){
-      vm.books = data;
-    });
+function BooksController($http) {
+  var vm = this;
+  vm.names = ["Marc", "Maren", "Diesel"]
+  vm.books = getBooks().success(function(data){
+    vm.books = data;
+  });
 
-    function getBooks(){
-      return $http.get('http://localhost:3000/books.json');
-    }
+  function getBooks(){
+    return $http.get('http://localhost:3000/books.json');
   }
+}
 ~~~
 
-> We'll add a getBooks() function to grab all the books from our REST-ful endpoint. We'll assign the results of that function to the variable `vm.books`. Also, don't forget to inject `$http` into `BooksController`.
+  *We'll add a getBooks() function to grab all the books from our REST-ful endpoint. We'll assign the results of that function to the variable `vm.books`. Also, don't forget to inject `$http` into `BooksController`.*
 
 ## Update our view
 
-- Let's go to our `app/assets/views/home/home.html.erb` page and make some small tweaks. First, we'll adjust our `ng-repeat` so it repeats our `vm.book` variable. We'll also add some code to render the `title` and `author` of each book. Here's the code for our `ul`:
+24) Let's go to our `app/assets/views/home/home.html.erb` page and make some small tweaks. First, we'll adjust our `ng-repeat` so it repeats our `vm.book` variable. We'll also add some code to render the `title` and `author` of each book. Here's the code for our `ul`:
 
 ~~~html
 <ul ng-repeat="book in ctrl.books">
+  {% raw %}
   Title: {{book.title}} </br> 
   Author: {{book.author}}
+  {% endraw %}
 </ul>
 ~~~
 
-##Conclusion
+## Conclusion
 I really love Rails. It's great to pair the rapid prototyping ability of Rails with an Angular front-end!
 
 
