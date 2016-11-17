@@ -5,8 +5,6 @@ date:   2016-02-23 08:29:23 -0500
 categories:
 ---
 
-**in progress...**
-
 I'm taking a Data Science course that incorporates Python. I thought I'd write a quick + dirty summary of some key (cool) differences between the two languages. Forgive me if the syntax is slightly off as I'm writing this from memory.
 
 #### Methods
@@ -23,12 +21,13 @@ In Ruby, a collection that uses index is called an Array. Python calls them list
 In Ruby, a collection of key/value pairs is called a Hash. Python calls them Dictionaries.
 
 #### Classes
-Ruby uses the `initialize` method to instatiate new instances of a class. Python uses `__init()__`. 
+Ruby uses the `initialize` method to instatiate new instances of a class. Python uses `__init()__`.
 
 In Python, you must pass in the keyword `self` as the first argument in a method. In Ruby, you can assign a method to self as in `self.name_of_method`.
 
 #### `&&`, `||` operators
 Ruby uses `&&` and `||` for comparisons. Python uses the keywords `and` and `or`.
 
+#### Whitespace and colons
 
-#### Whitespace and colons 
+...to be continued
