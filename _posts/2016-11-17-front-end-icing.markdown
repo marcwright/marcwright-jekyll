@@ -17,4 +17,4 @@ One of the biggest issues that students run into is with project management. Stu
 
 Front-end is fun for most folks, especially newer devs. You get immediate visual feedback which is more satisfying for new developers. Databases and server-side programming can feel a little 'black-boxy' and more obtuse than rendering HTML/CSS/JS in the browser.
 
-Plus, when the back-end gets a little confusing or intimidating, it's sometimes good to switch gears and work on something more visual and 
+Plus, when the back-end gets a little confusing or intimidating, it's sometimes good to switch gears and work on something more visual and
